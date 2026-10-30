@@ -1,5 +1,7 @@
 # Brokspace example: NestJS Tasks API
 
+[![CI](https://github.com/brokspace/example-nestjs/actions/workflows/ci.yml/badge.svg)](https://github.com/brokspace/example-nestjs/actions/workflows/ci.yml)
+
 A small, realistic NestJS API to try [Brokspace](https://github.com/brokspace/brok)
 on: search it by meaning, ask questions about it, review and commit changes
 with a local LLM, and connect your coding agent.
@@ -22,6 +24,7 @@ docs/
 Needs Node.js 20+ and pnpm.
 
 ```sh
+git clone https://github.com/brokspace/example-nestjs && cd example-nestjs
 pnpm install
 pnpm start:dev          # http://localhost:3000
 pnpm test && pnpm test:e2e
