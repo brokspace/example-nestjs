@@ -105,7 +105,8 @@ agent, try `/ask-brok` or "use brok_search to find where roles are checked".
 |---|---|---|
 | `.brokspace/brok.yml` | Brokspace settings for this project | yes |
 | `.brokspace/skills/` | Project skills | yes |
-| `.brokspace/databases`, shards, logs | Index and runtime state | no (`.brokspace/.gitignore` handles it) |
+| `.brokspace/shards/shards.lock`, `*/shard.json` | Which shards the project uses | yes |
+| `.brokspace/databases`, shard binaries, logs | Index and runtime state | no (`.brokspace/.gitignore` handles it) |
 | `.mcp.json`, `.vscode/mcp.json`, `.cursor/mcp.json` | MCP search tool for coding agents | yes |
 | `.claude/skills/`, `.agents/skills/` | Skills exported for coding agents | yes |
 

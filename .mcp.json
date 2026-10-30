@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "brokspace": {
+      "args": [
+        "mcp"
+      ],
+      "command": "brok",
+      "type": "stdio"
+    }
+  }
+}
