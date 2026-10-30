@@ -1,98 +1,113 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Brokspace example: NestJS Tasks API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A small, realistic NestJS API to try [Brokspace](https://github.com/brokspace/brok)
+on: search it by meaning, ask questions about it, review and commit changes
+with a local LLM, and connect your coding agent.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The API itself: users log in, get a JWT access token plus a rotating refresh
+token, and manage their tasks (members see their own, admins see everyone's).
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ pnpm install
+```text
+src/
+  auth/     login, refresh token rotation + reuse detection, global JWT guard, roles
+  tasks/    CRUD with ownership rules and status transitions
+  users/    in-memory users (two demo accounts)
+  config/   settings from the environment
+docs/
+  auth.md   how authentication works
 ```
 
-## Compile and run the project
+## Run the API
 
-```bash
-# development
-$ pnpm run start
+Needs Node.js 20+ and pnpm.
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```sh
+pnpm install
+pnpm start:dev          # http://localhost:3000
+pnpm test && pnpm test:e2e
 ```
 
-## Run tests
+Demo accounts: `alice@example.com` (admin) and `bob@example.com` (member),
+both with password `password123`.
 
-```bash
-# unit tests
-$ pnpm run test
+```sh
+curl -s -X POST localhost:3000/auth/login -H "content-type: application/json" \
+  -d '{"email":"bob@example.com","password":"password123"}'
+# -> { "accessToken": "...", "refreshToken": "...", "expiresIn": 900 }
 
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+curl -s localhost:3000/tasks -H "authorization: Bearer <accessToken>"
 ```
 
-## Deployment
+## Try Brokspace on it
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Install `brok` and, optionally, a local LLM first: see the
+[getting started guide](https://github.com/brokspace/brok/blob/main/docs/getting-started.md)
+(steps 1 and 2). Then, in this folder:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+```sh
+brok init               # workspace, agent, search model, local LLM, index, coding agents
+brok doctor             # everything should be ✓
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Find code
 
-## Resources
+```sh
+brok search "where is the access token checked"
+brok search "what happens when a refresh token is used twice"
+brok search "who can see which tasks"
+brok search RefreshTokenStore           # names work too
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Results are whole functions and classes (`jwt-auth.guard.ts` `canActivate`,
+`AuthService.refresh`, `canAccess` ...), found by meaning, not just by words.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Ask, chat, review, commit
 
-## Support
+```sh
+brok ask "how does refresh token rotation work here?"
+brok chat                                   # follow-up questions; /skill grill-me, /exit
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Make a change, then let your LLM review it and write the commit message:
 
-## Stay in touch
+```sh
+# e.g. add a `priority` field to tasks in src/tasks/task.entity.ts and the DTOs
+brok review                                 # review of the uncommitted diff
+git add -A && brok commit                   # Conventional Commits message, then commit
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+While `brok` runs in the background (`brok start`, or started by the first
+`ask`), the index follows every save and commit within seconds:
+`brok status` shows it, `brok logs -f` shows what it is doing.
+
+### Skills
+
+```sh
+brok skill list
+brok skill run code-review "the refresh token rotation in src/auth"
+brok skill run tdd "add a priority field to tasks"
+```
+
+`.brokspace/skills/nest-endpoint/` is a workspace skill for this project: it
+teaches the LLM (and your coding agent) how endpoints are written here.
+Try `brok skill run nest-endpoint "GET /tasks/overdue"`.
+
+### Your coding agent
+
+`brok init` (step 6) or `brok setup agents` connected Claude Code, Cursor,
+VS Code or Codex: they get the `brok_search` tool and the skills. In your
+agent, try `/ask-brok` or "use brok_search to find where roles are checked".
+
+## What `brok init` added
+
+| Path | What | Commit it? |
+|---|---|---|
+| `.brokspace/brok.yml` | Brokspace settings for this project | yes |
+| `.brokspace/skills/` | Project skills | yes |
+| `.brokspace/databases`, shards, logs | Index and runtime state | no (`.brokspace/.gitignore` handles it) |
+| `.mcp.json`, `.vscode/mcp.json`, `.cursor/mcp.json` | MCP search tool for coding agents | yes |
+| `.claude/skills/`, `.agents/skills/` | Skills exported for coding agents | yes |
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
