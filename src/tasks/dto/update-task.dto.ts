@@ -6,8 +6,8 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { TASK_STATUSES } from '../task.entity';
-import type { TaskStatus } from '../task.entity';
+import { TASK_PRIORITIES, TASK_STATUSES } from '../task.entity';
+import type { TaskPriority, TaskStatus } from '../task.entity';
 
 export class UpdateTaskDto {
   @IsOptional()
@@ -24,6 +24,10 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsIn(TASK_STATUSES)
   status?: TaskStatus;
+
+  @IsOptional()
+  @IsIn(TASK_PRIORITIES)
+  priority?: TaskPriority;
 
   @IsOptional()
   @IsDateString()

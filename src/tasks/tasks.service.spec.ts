@@ -46,6 +46,14 @@ describe('TasksService', () => {
     );
   });
 
+  it('defaults the priority to medium and lets it change', () => {
+    const task = tasks.create(bob, { title: 'triage inbox' });
+    expect(task.priority).toBe('medium');
+    expect(tasks.update(bob, task.id, { priority: 'high' }).priority).toBe(
+      'high',
+    );
+  });
+
   it('filters by status', () => {
     const task = tasks.create(bob, { title: 'a' });
     tasks.create(bob, { title: 'b' });

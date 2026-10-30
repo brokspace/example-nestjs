@@ -44,6 +44,7 @@ export class TasksService {
       description: dto.description,
       dueDate: dto.dueDate,
       status: 'todo',
+      priority: dto.priority ?? 'medium',
       ownerId: user.id,
       createdAt: now,
       updatedAt: now,
