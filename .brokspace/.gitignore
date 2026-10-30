@@ -1,0 +1,9 @@
+# Machine-local runtime state, managed by brok.
+cache/
+run/
+logs/
+shards/.staging/
+shards/*/bin/
+# The index is local by default. Remove the next line, or run `brok setup`
+# and pick Git LFS, to version it with the repository.
+databases/

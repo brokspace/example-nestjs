@@ -58,8 +58,9 @@ brok search "who can see which tasks"
 brok search RefreshTokenStore           # names work too
 ```
 
-Results are whole functions and classes (`jwt-auth.guard.ts` `canActivate`,
-`AuthService.refresh`, `canAccess` ...), found by meaning, not just by words.
+Results are whole functions, classes and doc sections (`canAccess`,
+`RefreshTokenStore`, `docs/auth.md` ...), found by meaning, not just by
+words. (This README shows up too, since it contains these exact questions.)
 
 ### Ask, chat, review, commit
 

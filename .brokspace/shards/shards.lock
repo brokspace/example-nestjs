@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "shards": {
+    "brok-agent": {
+      "version": "0.2.0",
+      "source": {
+        "kind": "builtin"
+      },
+      "binary_sha256": "6261254c3641471cb6e32e76342aa4c680e3e294aa17646ba89b9704cd3e8815",
+      "installed_at": 1793369394
+    }
+  }
+}

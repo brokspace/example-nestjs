@@ -1,0 +1,3 @@
+interface:
+  display_name: "Nest Endpoint"
+  short_description: "Describe nest-endpoint in a few words"
