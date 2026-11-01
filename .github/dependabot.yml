@@ -10,6 +10,15 @@ updates:
         patterns: ["@nestjs/*"]
       minor-and-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # v12 of @nestjs/config and @nestjs/jwt are ESM-only and break Jest (ts-jest, CommonJS).
+      - dependency-name: "@nestjs/config"
+        versions: [">=12"]
+      - dependency-name: "@nestjs/jwt"
+        versions: [">=12"]
+      # typescript-eslint does not support TypeScript 6 yet (types resolve to `any`).
+      - dependency-name: typescript
+        versions: [">=6"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
